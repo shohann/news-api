@@ -23,6 +23,8 @@ const allNews = async(req, res) => {
     }
 }
 
+// write a function which will give all the category names
+
 const letestNews = async(req, res) => {
     try {
         const result = await News.find({status: false}).limit(5).sort({ publishTime : -1 }); // stutas true dite hobe by admin
