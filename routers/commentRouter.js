@@ -2,9 +2,11 @@ const express = require('express');
 const _ = require('lodash'); // Lodash
 const { Comment } = require('../models/comment');
 const authorize = require('../middlewares/authorize');
+const commentator = require('../middlewares/commentator');
 
 const router = express.Router();
 
+// It is releted to news ID
 const commentList = async(req, res) => {
     const id = req.params.newsId;
     try {
@@ -47,19 +49,49 @@ const addComment = async(req, res) => {
 
 // Update and Delete are restricted feature for other user.only real comentator can do this
 // comment authorizatin middlewares -> commentator
+// These will be identify from the array of objects which we get from the GET request for a specific news
+// update and delete is relete fd to user ID and that specific comment id.We have to check weather cirrent user is the original comentator of this comment or not using comment id 
 const updateComment = async(req, res) => {
+    const commentId = req.params.commentId; // From Paramete
+    const updatedData = req.body;
+    // Here we are approving  news by put request and also content updation
+    // Idea : approval status ta ekhane restrict kora jaite pare,,,admin alada route or patch request dia satus true korbe
+    try {
+        const result = await News.findByIdAndUpdate(commentId, updatedData,{
+            new: true,
+            useFindAndModify: false
+        });
+
+        if (!result) return res.status(404).send('ID not found'); // Other should have this or not?
+
+        res.send(result);
+    } catch (err) {
+        return res.status(404).send('ID not found'); //ager gulo te kan arokom hoy ni 
+    }
 
 }
 
 const deleteComment = async(req, res) => {
+    const commentId = req.params.commentId; // From Paramete
+
+    try {
+        const result = await News.findByIdAndDelete(commentId);
+
+        if (!result) return res.status(404).send('ID not found'); // Other should have this or not?
+        res.send(result);
+    } catch (err) {
+        return res.status(404).send('ID not found'); //ager gulo te kan arokom hoy ni 
+    }
 
 }
 
 router.route('/:newsId')
     .get(commentList) // for getting all the comments for a specific news
     .post(authorize, addComment) // For posting a comment in a sepecific news by every authorize user
-    .put(authorize, updateComment) // For updeating a comment in a sepecific news by every authorize user
-    .delete(authorize, deleteComment); // For deleting a comment in a sepecific news by every authorize user
+
+router.route('/:commentId') //For specific comment.I client side we would have to get all the comments first.from there we can get all comments with id's. 
+    .put(authorize, commentator, updateComment) // For updeating a comment in a sepecific news by every authorize user
+    .delete(authorize, commentator, deleteComment); // For deleting a comment in a sepecific news by every authorize user
 
 module.exports = router;
 
@@ -69,5 +101,6 @@ module.exports = router;
 // news id and parameter id needed for authorized comment
 // Only autorize user can post a comment
 // A Comment can only be update or delete by Current logged In user if he really posted the comment
-// For update and delete we will need to check current user id with the userID in the comment document.If it match then we would allow that user to update or delete that comment
-
+// For update and delete we will need to check current user id(from token payload) with the userID in the comment document.If it match then we would allow that user to update or delete that comment
+// If the user is the  actual commentator then he can edit or delete the comment
+// In client side we need conditional rendering for showing the "EDIT" and "DELETE" option for current loggein in user for his aothorized comments
