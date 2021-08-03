@@ -139,3 +139,79 @@ response:
         "__v": 0
     }
 ]
+
+
+# Comment Section
+
+# Posting a comment:
+
+POST request link: http://localhost:3001/comment/:newsId
+
+Example: http://localhost:3001/comment/60fbf10d41db7953236972fe
+
+Request body:
+
+{
+    "commentText": "It is my first comment"
+}
+
+Response:
+
+{
+    "_id": "6108c7d8824a296f2635fe59",
+    "userId": "60fb99534b235f74cad118db",
+    "newsId": "60fbf10d41db7953236972fe",
+    "commentText": "It is my first comment",
+    "commentTime": "2021-08-03T04:36:40.879Z",
+    "__v": 0
+}
+
+
+# Getting all comments for a particuller news:
+
+GET request link: http://localhost:3001/comment/:newsId
+
+Example: http://localhost:3001/comment//60fbf10d41db7953236972fe
+
+
+# Updating comment (only for authorized commentator, redtricted for other users)
+
+Put request link: http://localhost:3001/comment/:commentId
+
+Example: http://localhost:3001/comment/6108c7d8824a296f2635fe59
+
+Request body:
+
+{
+    "commentText": "It is my first comment (updated)"
+}
+
+
+Response:
+
+{
+    "_id": "6108c7d8824a296f2635fe59",
+    "userId": "60fb99534b235f74cad118db",
+    "newsId": "60fbf10d41db7953236972fe",
+    "commentText": "It is my first comment (updated) 6",
+    "commentTime": "2021-08-03T04:36:40.879Z",
+    "__v": 0
+}
+
+
+# Delete comment (only for authorized commentator, redtricted for other users)
+
+DEL request link: http://localhost:3001/comment/:commentId
+
+Example: http://localhost:3001/comment/6108c7d8824a296f2635fe59
+
+Response: return the deleted comment object
+
+{
+    "_id": "6108c7d8824a296f2635fe59",
+    "userId": "60fb99534b235f74cad118db",
+    "newsId": "60fbf10d41db7953236972fe",
+    "commentText": "It is my first comment (updated) 6",
+    "commentTime": "2021-08-03T04:36:40.879Z",
+    "__v": 0
+}

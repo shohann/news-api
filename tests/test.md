@@ -194,11 +194,10 @@ Request Body:
 Response:
 
 {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGZiOTk1MzRiMjM1Zjc0Y2FkMTE4ZGIiLCJlbWFpbCI6ImFrYXNoQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNjI3MTAxNTg1LCJleHAiOjE2MjczNjA3ODV9.kxirEh62cI6DpCOohtL0y1mUs-U061nHpOrpeq8uTZM",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGZiOTk1MzRiMjM1Zjc0Y2FkMTE4ZGIiLCJlbWFpbCI6ImFrYXNoQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNjI3OTY0MTY0LCJleHAiOjE2MjgyMjMzNjR9.WM6UXXiRAXJhdS28nSOA7yGUaJKtczBwLDHdAS3Edic",
     "user": {
         "_id": "60fb99534b235f74cad118db",
         "email": "akash@gmail.com",
         "name": "Akash"
     }
 }
-

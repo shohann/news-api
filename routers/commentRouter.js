@@ -8,9 +8,9 @@ const router = express.Router();
 
 // It is releted to news ID
 const commentList = async(req, res) => {
-    const id = req.params.newsId;
+    const id = req.params.newsId; // news id in parameter
     try {
-        const result = await Comment.find({ _id : id }.sort({ commentTime : 1 }));
+        const result = await Comment.find({ newsId : id }).sort({ commentTime : 1 }); // compare  newsId in database with the parameter newsId
         res.send(result); // Give all news which will match with the parameter newsId
     } catch(err) {
         const errMsgs = []
@@ -29,7 +29,7 @@ const addComment = async(req, res) => {
         // Creating comment object
         userId : userId,
         newsId : newsId,
-        commentText: req.body
+        commentText: req.body.commentText
     }
 
     const comment = new Comment(commentObj);
@@ -50,18 +50,18 @@ const addComment = async(req, res) => {
 // Update and Delete are restricted feature for other user.only real comentator can do this
 // comment authorizatin middlewares -> commentator
 // These will be identify from the array of objects which we get from the GET request for a specific news
-// update and delete is relete fd to user ID and that specific comment id.We have to check weather cirrent user is the original comentator of this comment or not using comment id 
+// update and delete is relete fd to user ID and that specific comment id.We have to check weather current user is the original comentator of this comment or not using comment id 
 const updateComment = async(req, res) => {
     const commentId = req.params.commentId; // From Paramete
     const updatedData = req.body;
     // Here we are approving  news by put request and also content updation
     // Idea : approval status ta ekhane restrict kora jaite pare,,,admin alada route or patch request dia satus true korbe
+    console.log(req.params.commentId);
     try {
-        const result = await News.findByIdAndUpdate(commentId, updatedData,{
+        const result = await Comment.findByIdAndUpdate(commentId, updatedData,{
             new: true,
             useFindAndModify: false
         });
-
         if (!result) return res.status(404).send('ID not found'); // Other should have this or not?
 
         res.send(result);
@@ -75,7 +75,7 @@ const deleteComment = async(req, res) => {
     const commentId = req.params.commentId; // From Paramete
 
     try {
-        const result = await News.findByIdAndDelete(commentId);
+        const result = await Comment.findByIdAndDelete(commentId);
 
         if (!result) return res.status(404).send('ID not found'); // Other should have this or not?
         res.send(result);
@@ -90,14 +90,14 @@ router.route('/:newsId')
     .post(authorize, addComment) // For posting a comment in a sepecific news by every authorize user
 
 router.route('/:commentId') //For specific comment.I client side we would have to get all the comments first.from there we can get all comments with id's. 
-    .put(authorize, commentator, updateComment) // For updeating a comment in a sepecific news by every authorize user
+    .patch(authorize, commentator, updateComment) // For updeating a comment in a sepecific news by every authorize user
     .delete(authorize, commentator, deleteComment); // For deleting a comment in a sepecific news by every authorize user
 
 module.exports = router;
 
 // In authorize middleware we can get the payload of currnet logged in users
 // In payload, we can get the user id
-// We will get the news id from parameter
+// We will get the news id from parameter 
 // news id and parameter id needed for authorized comment
 // Only autorize user can post a comment
 // A Comment can only be update or delete by Current logged In user if he really posted the comment
